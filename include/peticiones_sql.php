@@ -1,0 +1,171 @@
+<?php
+
+// Protecci�n contra ejecuci�n incorrecta
+defined('PATH_BASE') or die();
+
+/*****************************
+ * Fichero que contiene todas las sentencias SQL que se usan en el programa
+ *****************************/
+
+$sql = Array(
+	'SQL_ANUNCIOS' => 'SELECT a.id, a.fechaAlta, a.titulo, a.texto, a.usuario, f.fichero, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes, a.categoria, a.localidad, c.nombre as nombre_categoria, p.nombre as nombre_provincia FROM #_anuncios as a LEFT JOIN #_ficheros as f ON f.id = a.imagen_principal LEFT JOIN #_categorias as c ON c.id = a.categoria LEFT JOIN #_provincias as p ON a.provincia = p.id WHERE publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 0 AND a.categoria = c.id ORDER by fechaAlta DESC',
+	'SQL_ANUNCIOS_PROVINCIA' => 'SELECT a.id, a.fechaAlta, a.titulo, a.texto, a.usuario, f.fichero, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes, a.categoria, a.localidad, c.nombre as nombre_categoria, p.nombre as nombre_provincia FROM #_anuncios as a LEFT JOIN #_ficheros as f on f.id = a.imagen_principal LEFT JOIN #_categorias as c ON c.id = a.categoria LEFT JOIN #_provincias as p ON a.provincia = p.id WHERE publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 0 AND provincia = ? ORDER by fechaAlta DESC',
+	'SQL_ANUNCIO' => 'SELECT a.id, DATE_FORMAT(a.fechaAlta, \'%d/%m/%Y\') as fechaAlta, a.titulo, a.texto, a.usuario, a.categoria, a.localidad, c.nombre as nombre_categoria, DATE_FORMAT(a.fechaFinPub, \'%d/%m/%Y\') as fechaFinPub, a.publicado, a.provincia, p.nombre as nombre_provincia, a.telefono, a.imagen_principal, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes, u.login FROM #_anuncios as a, #_usuarios as u, #_categorias as c, #_provincias as p WHERE a.id = ? AND a.usuario = u.id AND c.id = a.categoria AND a.provincia = p.id',
+	'SQL_ANUNCIOS_UNA_PALABRA' => 'SELECT a.id FROM #_anuncios as a WHERE publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND (UPPER(a.titulo) like UPPER(?) OR UPPER(a.texto) like UPPER(?)) ORDER by fechaAlta DESC',
+	'SQL_TIPO_ANUNCIO' => 'SELECT tipo FROM #_anuncios WHERE id = ?',
+	'SQL_ANUNCIO_CAMBIO_TIPO' => 'UPDATE #_anuncios SET tipo = ? WHERE id = ?',
+	'SQL_ANUNCIO_MODIFICA_IMAGEN_PRINCIPAL' => 'UPDATE #_anuncios SET imagen_principal = ? WHERE id = ?',
+	'SQL_ANUNCIOS_CATEGORIA' => 'SELECT * FROM #_anuncios WHERE categoria = ? and tipo = 0',
+	'SQL_ANUNCIOS_CATEGORIA_HIJOS' => 'SELECT a.id, a.fechaAlta, a.titulo, a.texto, a.usuario, f.fichero, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes, c.nombre as nombre_categoria, p.nombre as nombre_provincia, a.localidad FROM #_anuncios as a LEFT JOIN #_categorias as c ON c.id = a.categoria LEFT JOIN #_ficheros as f on f.id = a.imagen_principal LEFT JOIN #_provincias as p ON a.provincia = p.id WHERE c.id in (select id from alq_categorias WHERE padre = ? or id = ?) and publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 0 ORDER by fechaAlta DESC',
+	'SQL_ANUNCIOS_CATEGORIA_HIJOS_PROVINCIA' => 'SELECT a.id, a.fechaAlta, a.titulo, a.texto, a.usuario, f.fichero, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes, p.nombre as nombre_provincia, c.nombre as nombre_categoria, a.localidad FROM #_anuncios as a LEFT JOIN #_categorias as c ON c.id=a.categoria LEFT JOIN #_ficheros as f on f.id = a.imagen_principal LEFT JOIN #_provincias as p ON p.id = a.provincia WHERE c.id in (select id from alq_categorias WHERE padre = ? or id = ?) and publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 0 AND provincia = ? ORDER by fechaAlta DESC',
+	'SQL_ANUNCIOS_DESTACADOS' => 'SELECT a.id, a.fechaAlta, a.titulo, a.texto, a.usuario, a.localidad, f.fichero, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes FROM #_anuncios as a LEFT JOIN #_ficheros as f on f.id = a.imagen_principal WHERE publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 1 ORDER by fechaAlta DESC',
+	'SQL_ANUNCIOS_DESTACADOS_PROVINCIA' => 'SELECT a.id, a.fechaAlta, a.titulo, a.texto, a.usuario, a.localidad, f.fichero, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes FROM #_anuncios as a LEFT JOIN #_ficheros as f on f.id = a.imagen_principal WHERE publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 1 AND provincia = ? ORDER by fechaAlta DESC',
+	'SQL_ANUNCIOS_DESTACADOS_CATEGORIA' => 'SELECT * FROM #_anuncios WHERE categoria = ? AND tipo = 1',
+	'SQL_ANUNCIOS_DESTACADOS_CATEGORIA_HIJOS' => 'SELECT a.id, a.fechaAlta, a.titulo, a.texto, a.usuario, a.localidad, p.nombre as nombre_provincia, c.nombre as nombre_categoria, f.fichero, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes FROM #_anuncios as a LEFT JOIN #_ficheros as f on f.id = a.imagen_principal LEFT JOIN #_provincias as p ON a.provincia = p.id LEFT JOIN #_categorias as c ON c.id=a.categoria WHERE c.id in (select id from #_categorias WHERE padre = ? or id = ?) and publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 1 ORDER by fechaAlta DESC',
+	'SQL_ANUNCIOS_DESTACADOS_CATEGORIA_HIJOS_PROVINCIA' => 'SELECT a.id, a.fechaAlta, a.titulo, a.texto, a.usuario, f.fichero, a.precio_dia, a.precio_semana, a.precio_quincena, a.precio_mes, a.localidad, p.nombre as nombre_provincia, c.nombre as nombre_categoria FROM #_anuncios as a LEFT JOIN #_categorias as c ON c.id=a.categoria LEFT JOIN #_provincias as p ON a.provincia = p.id LEFT JOIN #_ficheros as f on f.id = a.imagen_principal WHERE c.id in (select id from #_categorias WHERE padre = ? or id = ?) and publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 1 AND provincia = ? ORDER by fechaAlta DESC',
+	'SQL_TOTAL_ANUNCIOS_PROVINCIA' => 'SELECT count(*) as total FROM #_anuncios AS a, #_provincias as p WHERE a.provincia = p.id AND publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 0 AND provincia = ?',
+	'SQL_TOTAL_ANUNCIOS_CATEGORIA' => 'SELECT count(*) as total FROM #_anuncios WHERE categoria = ? AND tipo = 0',
+	'SQL_TOTAL_ANUNCIOS_CATEGORIA_PROVINCIA' => 'SELECT count(*) as total FROM #_anuncios WHERE categoria = ? AND tipo = 0 AND provincia = ?',
+	'SQL_TOTAL_ANUNCIOS_CATEGORIA_HIJOS' => 'SELECT count(*) as total FROM #_anuncios as a, #_categorias as c WHERE (a.categoria = c.id) AND (c.id = ? OR c.padre = ?) and publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) AND tipo = 0',
+	'SQL_TOTAL_ANUNCIOS_CATEGORIA_PROVINCIA_HIJOS' => 'SELECT count(*) as total FROM #_anuncios as a, #_categorias as c WHERE (a.categoria = c.id) AND (c.id = ? OR c.padre = ?) AND and publicado=1 AND (isnull(fechaFinPub) or fechaFinPub >= date(now())) tipo = 0 AND provincia = ?',
+	'SQL_TOTAL_ANUNCIOS' => 'SELECT count(*) as total FROM #_anuncios',
+	'SQL_TOTAL_ANUNCIOS_CADUCADOS' => 'SELECT count(*) as total FROM #_anuncios WHERE fechaFinPub > 0  AND fechaFinPub < date(now())',
+	'SQL_TOTAL_ANUNCIOS_NO_CADUCADOS' => 'SELECT count(*) as total FROM #_anuncios WHERE fechaFinPub > 0 AND fechaFinPub >= date(now())',
+	'SQL_TOTAL_ANUNCIOS_POR_CADUCAR' => 'SELECT count(*) as total FROM #_anuncios WHERE fechaFinPub > 0 AND fechaFinPub < ADDDATE(date(now()), ?) AND fechaFinPub >= date(now())',
+	'SQL_ANUNCIO_CAMBIA_ESTADO' => 'UPDATE #_anuncios SET publicado = ? WHERE id = ?',
+	'SQL_ANUNCIO_INCREMENTAR_VISITA' => 'UPDATE #_anuncios SET visto = visto + 1 WHERE id = ?',
+	
+	// Consultas de banners
+	'SQL_TOTAL_BANNERS' => 'SELECT count(*) as total FROM #_banners',
+	'SQL_NUEVO_BANNER' => 'UPDATE #_banners SET fecha_fin = ?, tipo = ?, categoria = ?, titulo = ?, url = ?, publicado = ?, imagen = ?, tipo_imagen = ? WHERE id = ?',
+	'SQL_NUEVO_BANNER_VACIO' => 'INSERT INTO #_banners (id, fecha_alta) VALUES (?, now())',
+	'SQL_BANNER' => 'SELECT * FROM #_banners WHERE id = ?',
+	'SQL_BANNERS' => 'SELECT id, url, tipo, titulo, DATE_FORMAT(fecha_alta, \'%d/%m/%Y\') as fecha_alta, imagen, publicado FROM #_banners ORDER BY fecha_alta DESC',
+	'SQL_BANNERS_SUPERIOR' => 'SELECT * FROM #_banners WHERE tipo = 0 AND publicado = 1 ORDER BY fecha_alta DESC',
+	'SQL_BANNERS_LATERAL' => 'SELECT * FROM #_banners WHERE tipo = 1 AND publicado = 1 ORDER BY fecha_alta DESC',
+	'SQL_BANNERS_LATERAL_CATEGORIA' => 'SELECT * FROM #_banners WHERE tipo = 1 AND publicado = 1 AND categoria = ? ORDER BY fecha_alta DESC',
+	'SQL_BANNER_MODIFICA_IMAGEN' => 'UPDATE #_banners SET imagen = ?, tipo_imagen = ? WHERE id = ?',
+	'SQL_BANNER_BORRAR' => 'DELETE FROM #_banners WHERE id = ?',
+	'SQL_BANNER_CAMBIA_ESTADO' => 'UPDATE #_banners SET publicado = ? WHERE id = ?',
+
+	// Consultas de categorias
+	'SQL_CATEGORIA_PADRE' => 'SELECT * FROM #_categorias WHERE padre = ?',
+	'SQL_CATEGORIA' => 'SELECT * FROM #_categorias WHERE id = ?',
+	'SQL_TOTAL_SUBCATEGORIAS' => 'SELECT count(*) as total FROM #_categorias WHERE padre = ?',
+	'SQL_BORRAR_CATEGORIA' => 'DELETE FROM #_categorias WHERE id = ?',
+	'SQL_NUEVA_CATEGORIA' => 'INSERT INTO #_categorias (nombre, descripcion) VALUES (?, ?)',
+	'SQL_NUEVA_CATEGORIA_IMAGEN' => 'INSERT INTO #_categorias (nombre, descripcion, imagen) VALUES (?, ?, ?)',
+	'SQL_NUEVA_SUBCATEGORIA' => 'INSERT INTO #_categorias (nombre, descripcion, padre) VALUES (?, ?, ?)',
+	'SQL_MODIFICAR_CATEGORIA' => 'UPDATE #_categorias SET nombre = ?, descripcion = ? WHERE id = ?',
+	'SQL_MODIFICAR_CATEGORIA_IMAGEN' => 'UPDATE #_categorias SET imagen = ? WHERE id = ?',
+	'SQL_MODIFICAR_CATEGORIA_BORRAR_IMAGEN' => 'UPDATE #_categorias SET imagen = NULL WHERE id = ?',
+
+	// Consultas de imágenes
+	'SQL_BORRAR_IMAGEN' => 'DELETE FROM #_ficheros WHERE id = ?',
+	'SQL_BORRAR_IMAGENES' => 'DELETE FROM #_ficheros WHERE id_anuncio = ? AND tipo_imagen = ?',
+	'SQL_NUEVA_IMAGEN_ANUNCIO' => 'INSERT INTO #_ficheros (id_anuncio, fichero, tipo_imagen) VALUES (?, ?, ?)',
+	'SQL_IMAGENES_ANUNCIO' => 'SELECT * FROM #_ficheros WHERE id_anuncio = ? AND tipo_imagen = ? ORDER BY id',
+	'SQL_IMAGEN' => 'SELECT * FROM #_ficheros WHERE id = ?',
+	
+	// Consultas de anuncios por usuario
+	'SQL_TOTAL_ANUNCIOS_USUARIO' => 'SELECT count(*) as total FROM #_anuncios WHERE usuario = ?',
+	'SQL_TOTAL_ANUNCIOS_NO_CADUCADOS_USUARIO' => 'SELECT count(*) as total FROM #_anuncios WHERE usuario = ? AND fechaFinPub > 0 AND fechaFinPub >= date(now())',
+	'SQL_TOTAL_ANUNCIOS_CADUCADOS_USUARIO' => 'SELECT count(*) as total FROM #_anuncios WHERE usuario = ? AND fechaFinPub > 0  AND fechaFinPub < date(now())',
+	'SQL_TOTAL_ANUNCIOS_POR_CADUCAR_USUARIO' => 'SELECT count(*) as total FROM #_anuncios WHERE usuario = ? AND fechaFinPub > 0 AND fechaFinPub < ADDDATE(date(now()), ?) AND fechaFinPub >= date(now())',
+	'SQL_ANUNCIOS_USUARIO_LIMIT' => 'SELECT * FROM #_anuncios WHERE usuario = ? ORDER BY fechaAlta DESC LIMIT ?',
+	'SQL_ANUNCIOS_USUARIO' => 'SELECT a.id, titulo, texto, DATE_FORMAT(a.fechaAlta, \'%d/%m/%Y\') as fechaalta, publicado, visto, login FROM #_anuncios as a, #_usuarios as u WHERE usuario = ? AND usuario = u.id ORDER BY a.fechaAlta DESC',
+	'SQL_ANUNCIOS_USUARIO_POR_CADUCAR' => 'SELECT a.id, titulo, texto, DATE_FORMAT(a.fechaAlta, \'%d/%m/%Y\') as fechaalta, publicado, visto, login FROM #_anuncios as a, #_usuarios as u WHERE usuario = ? AND usuario = u.id AND fechaFinPub > 0 AND fechaFinPub < ADDDATE(date(now()), ?) AND fechaFinPub >= date(now()) ORDER BY a.fechaAlta DESC',
+	'SQL_ANUNCIOS_USUARIO_CADUCADOS' => 'SELECT a.id, titulo, texto, DATE_FORMAT(a.fechaAlta, \'%d/%m/%Y\') as fechaalta, publicado, visto, login FROM #_anuncios as a, #_usuarios as u WHERE usuario = ? AND usuario = u.id AND fechaFinPub > 0  AND fechaFinPub < date(now()) ORDER BY a.fechaAlta DESC',
+	'SQL_ANUNCIOS_USUARIO_NO_CADUCADOS' => 'SELECT a.id, titulo, texto, DATE_FORMAT(a.fechaAlta, \'%d/%m/%Y\') as fechaalta, publicado, visto, login FROM #_anuncios as a, #_usuarios as u WHERE usuario = ? AND usuario = u.id AND fechaFinPub > 0 AND fechaFinPub >= date(now()) ORDER BY a.fechaAlta DESC',
+	'SQL_TODOS_ANUNCIOS_USUARIO' => 'SELECT a.id, titulo, texto, DATE_FORMAT(a.fechaAlta, \'%d/%m/%Y\') as fechaalta, publicado, visto, login, a.tipo FROM #_anuncios as a, #_usuarios as u WHERE usuario = u.id ORDER BY a.fechaAlta DESC',
+	'SQL_ANUNCIO_USUARIO' => 'SELECT count(*) as total FROM #_anuncios WHERE usuario = ? AND id = ?',
+	'SQL_NUEVO_ANUNCIO' => 'UPDATE #_anuncios SET usuario = ?, tipo = ?, fechaFinPub = ?, categoria = ?, titulo = ?, texto = ?, publicado = ?, provincia = ?, localidad = ?, telefono = ?, precio_dia = ?, precio_semana = ?, precio_quincena = ?, precio_mes = ? WHERE id = ?',
+	'SQL_NUEVO_ANUNCIO_VACIO' => 'INSERT INTO #_anuncios (id, fechaAlta) VALUES (?, now())',
+	'SQL_BUSCAR_ANUNCIO_TIT_CAT_USUARIO' => 'SELECT * FROM #_anuncios WHERE usuario = ? AND categoria = ? AND lower(titulo) LIKE lower(?)',
+	'SQL_PUBLICADOR_ANUNCIO' => 'SELECT u.id FROM #_usuarios as u, #_anuncios as a WHERE u.id = a.usuario AND a.id = ?',
+	'SQL_NUEVO_BANNER_ANUNCIO' => 'INSERT INTO #_banner (posicion, id_anuncio) VALUES (?, ?)',
+	'SQL_NUEVO_BANNER_URL' => 'INSERT INTO #_banner (posicion, enlace) VALUES (?, ?)',
+	'SQL_BORRAR_ANUNCIO' => 'DELETE FROM #_anuncios WHERE id = ?',
+	
+	// Consultas para las denuncias
+	'SQL_DENUNCIA' => 'SELECT * FROM #_denuncias WHERE id = ?',
+	'SQL_NUEVA_DENUNCIA' => 'UPDATE #_denuncias SET asunto = ?, denuncia = ?, id_usuario = ?, nombre = ?, apellidos = ?, email = ?, ip = ?, estado = ?, id_anuncio = ? WHERE id = ?',
+	'SQL_NUEVA_DENUNCIA_VACIA' => 'INSERT INTO #_denuncias (id, fecha_alta) VALUES (?, now())',
+	'SQL_TOTAL_DENUNCIAS' => 'SELECT count(*) as total FROM #_denuncias',
+	'SQL_DENUNCIAS' => 'SELECT * FROM #_denuncias ORDER BY fecha_alta',
+
+	// Consultas de mensajes
+	'SQL_MENSAJE' => 'SELECT m.asunto, UNIX_TIMESTAMP(m.fechaEnvio) as fechaenvio, m.contenido, remitente, leido, u.login FROM #_mensajes as m, #_usuarios as u WHERE m.id = ? AND u.id = m.remitente',
+	'SQL_TOTAL_MENSAJES_LEIDOS_USUARIO' => 'SELECT count(*) as total FROM #_mensajes WHERE destino = ? AND leido',
+	'SQL_TOTAL_MENSAJES_NUEVOS_USUARIO' => 'SELECT count(*) as total FROM #_mensajes WHERE destino = ? AND not(leido)',
+	'SQL_TOTAL_MENSAJES_USUARIO' => 'SELECT count(*) as total FROM #_mensajes WHERE destino = ?',
+	'SQL_MENSAJES_NUEVOS_USUARIO_LIMIT' => 'SELECT * FROM #_mensajes WHERE destino = ? AND not(leido) ORDER BY fechaEnvio DESC LIMIT ?',
+	'SQL_MENSAJES_USUARIO' => 'SELECT m.id, m.asunto, m.contenido, m.leido, DATE_FORMAT(m.fechaEnvio, \'%d/%m/%Y - %h:%i\') as fechaEnvio, u.login FROM #_mensajes as m, #_usuarios as u WHERE destino = ? AND u.id = remitente ORDER BY fechaEnvio DESC',
+	'SQL_MENSAJE_USUARIO' => 'SELECT count(*) as total FROM #_mensajes WHERE destino = ? AND id = ?',
+	'SQL_MENSAJES_USUARIO_LIMIT' => 'SELECT * FROM #_mensajes WHERE destino = ? AND leido ORDER BY fechaEnvio DESC LIMIT ?',
+	'SQL_NUEVO_MENSAJE' => 'INSERT INTO #_mensajes (remitente, destino, leido, asunto, contenido, fechaEnvio) VALUES (?, ?, 0, ?, ?, now())',
+	'SQL_MARCAR_MENSAJE_LEIDO' => 'UPDATE #_mensajes SET leido = ? WHERE id = ?',
+	'SQL_BORRAR_MENSAJE' => 'DELETE FROM #_mensajes WHERE id = ?',
+	
+	// Consultas de usuarios
+	'SQL_USUARIO' => 'select * from #_usuarios where lower(login) = lower(?)',
+	'SQL_USUARIO_ID' => 'select * from #_usuarios where id = ?',
+	'SQL_NUEVO_USUARIO' => 'insert into #_usuarios (login, password, nombre, apellidos, email, estado) values (?, ?, ?, ?, ?, ?)',
+	'SQL_NUEVO_USUARIO_TIPO' => 'insert into #_usuarios (login, password, nombre, apellidos, email, tipo, estado) values (?, ?, ?, ?, ?, ?, ?)',
+	'SQL_CAMBIO_PASSWORD' => 'UPDATE #_usuarios SET password = ? WHERE id = ?',
+	'SQL_CAMBIO_DATOS' => 'UPDATE #_usuarios SET nombre = ?, apellidos = ?, email = ? WHERE id = ?',
+	'SQL_TOTAL_USUARIOS' => 'SELECT count(*) as total FROM #_usuarios',
+	'SQL_USUARIOS' => 'SELECT * FROM #_usuarios ORDER BY login',
+	'SQL_USUARIOS_ADMIN' => 'SELECT * FROM #_usuarios WHERE tipo = 1 ORDER BY login',
+	'SQL_CAMBIA_USUARIO' => 'UPDATE #_usuarios SET -@- = ? WHERE id = ?',
+	'SQL_CAMBIO_ESTADO_USUARIO' => 'UPDATE #_usuarios SET estado = ? WHERE id = ?',
+	
+	// Consultas de verificacion de alta
+	'SQL_NUEVA_VERIFICACION' => 'INSERT INTO #_altaspendientes (id_usuario, cadena) VALUES (?, ?)',
+	'SQL_BUSCA_VERIFICACION' => 'SELECT * FROM #_altaspendientes WHERE cadena = ?',
+	'SQL_BORRA_VERIFICACION' => 'DEELTE FROM #_altaspendientes WHERE cadena = ?',
+	
+	// Consultas variadas
+	'SQL_LISTA_PROVINCIAS' => 'SELECT * FROM #_provincias ORDER BY nombre',
+	'SQL_PROVINCIA' => 'SELECT * FROM #_provincias WHERE id = ?'
+	);
+$sql_params = Array('SQL_ANUNCIO_CAMBIO_TIPO' => Array('integer', 'integer'),
+					'SQL_NUEVO_USUARIO' => Array('text', 'text', 'text', 'text', 'text'),
+					'SQL_NUEVO_USUARIO_TIPO' => Array('text', 'text', 'text', 'text', 'text', 'integer', 'integer'),
+					'SQL_CAMBIO_PASSWORD' => Array('text', 'integer'),
+					'SQL_CAMBIO_DATOS' => Array('text', 'text', 'text', 'integer'),
+					'SQL_NUEVO_ANUNCIO' => Array ('integer', 'integer', 'date', 'integer', 'text', 'text', 'integer', 'integer', 'text', 'text', 'text', 'text', 'text', 'text', 'integer'),
+					'SQL_NUEVO_ANUNCIO_VACIO' => Array('integer'),
+					'SQL_NUEVA_IMAGEN_ANUNCIO' => Array('integer', 'text', 'text'),
+					'SQL_NUEVO_MENSAJE' => Array('integer', 'integer', 'text', 'text'),
+					'SQL_MARCAR_MENSAJE_LEIDO' => Array('integer', 'integer'),
+					'SQL_BORRAR_MENSAJE' => Array('integer'),
+					'SQL_NUEVO_BANNER_ANUNCIO' => Array('integer', 'integer'),
+					'SQL_NUEVO_BANNER_URL' => Array('integer', 'text'),
+					'SQL_BORRAR_ANUNCIO' => Array('integer'),
+					'SQL_BORRAR_IMAGEN' => Array('integer'),
+					'SQL_BORRAR_IMAGENES' => Array('integer', 'text'),
+					'SQL_BORRAR_CATEGORIA' => Array('integer'),
+					'SQL_NUEVA_CATEGORIA' => Array('text', 'text'),
+					'SQL_NUEVA_CATEGORIA_IMAGEN' => Array('text', 'text', 'text'),
+					'SQL_NUEVA_SUBCATEGORIA' => Array('text', 'text', 'integer'),
+					'SQL_MODIFICAR_CATEGORIA' => Array('text', 'text', 'integer'),
+					'SQL_MODIFICAR_CATEGORIA_IMAGEN' => Array('text', 'integer'),
+					'SQL_MODIFICAR_CATEGORIA_BORRAR_IMAGEN' => Array('integer'),
+					'SQL_CAMBIA_USUARIO' => Array('text', 'integer'),
+					'SQL_CAMBIA_ESTADO_USUARIO' => Array('integer', 'integer'),
+					'SQL_NUEVA_VERIFICACION' => Array('integer', 'text'),
+					'SQL_BORRA_VERIFICACION' => Array('text'),
+					'SQL_ANUNCIO_CAMBIA_ESTADO' => Array('integer', 'integer'),
+					'SQL_ANUNCIO_MODIFICA_IMAGEN_PRINCIPAL' => Array('integer', 'integer'),
+					'SQL_NUEVO_BANNER' => Array ('date', 'integer', 'integer', 'text', 'text', 'integer', 'integer', 'integer', 'integer'),
+					'SQL_NUEVO_BANNER_VACIO' => Array('integer'),
+					'SQL_BANNER_MODIFICA_IMAGEN' => Array('integer', 'integer', 'integer'),
+					'SQL_BANNER_BORRAR' => Array('integer'),
+					'SQL_BANNER_CAMBIA_ESTADO' => Array('integer', 'integer'),
+					'SQL_ANUNCIO_INCREMENTAR_VISITA' => Array('integer'),
+					'SQL_NUEVA_DENUNCIA' => Array ('text', 'text', 'integer', 'text', 'text', 'text', 'text', 'integer', 'integer', 'integer'),
+					'SQL_NUEVA_DENUNCIA_VACIA' => Array('integer'),
+				);
+
+?>

@@ -1,0 +1,544 @@
+body,td,th {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	color: #000066;
+}
+body {
+	background-color: white;
+	margin-top: 0px;
+}
+
+/*td img {display: block;}*/
+
+img {
+	border: 0px;
+}
+
+a div {
+	text-decoration: none;
+	color: #000066;
+}
+
+/************* Zona de trabajo ****************************/
+td.contenido {
+}
+
+/************* LISTA CATEGORIAS Y MENU LATERAL ************/
+
+.menu_lateral .contenedorMenu {
+	padding: 0px;
+}
+
+.menu_lateral div {
+	padding-left: 10px;
+}
+
+.menu_lateral p {
+	padding-left: 20px;
+}
+
+.menu_lateral p.seccion {
+	background-color: #339933;
+	color: Black;
+	font-size: 18px;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding-bottom: 4px;
+}
+
+.contenedorEntradaMenu, .contenedorEntradaMenu a {
+	color: Black;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 9pt;
+}
+
+.entrada_submenu {
+	margin-left: 10px;
+}
+
+
+/*********************** LISTADO ANUNCIOS ********************/
+/*.seccion {
+	background-color: #000066;
+	color: White;
+	font-size: 18px;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding-bottom: 4px;
+	padding-left: 10px;
+}*/
+.seccionAnuncio {
+	background-color: #339933;
+	color: White;
+	font-size: 18px;
+	margin: 0px;
+	padding-bottom: 4px;
+	text-align: center;
+}
+.cuadroAnuncio {
+	margin: 10px 10px 10px 10px;
+	border-bottom: solid 1px #CCCCCC;
+	padding-bottom: 5px;
+}
+
+.cuadroAnuncio img {
+	float: left;
+	padding-right: 5px;
+}
+
+.cuadroAnuncio .tituloAnuncio {
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.cuadroAnuncio .textoAnuncio {
+}
+
+p.cierre {
+	clear: both;
+	text-align: center;
+	padding: 5px;
+}
+
+.anuncioDestacado {
+	border: solid 2px #CCCCCC;
+	margin: 10px 10px 10px 10px;
+	padding: 5px;
+}
+
+.anuncioDestacado img {
+	padding-right: 5px;
+	margin-right: 5px;
+	border-right: solid 1px #CCCCCC;
+}
+
+.anuncioDestacado .tituloAnuncio {
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.anuncioDestacado .textoAnuncio {
+}
+
+.anuncioDestacado p.cierre {
+	clear: both;
+	text-align: center;
+	padding: 5px;
+}
+
+.anuncioDestacadoPortada {
+	border: solid 2px #CCCCCC;
+	background-color: #FFFF99;
+	margin: 0px 0px 5px 4px;
+	padding: 5px;
+	height: 100px;
+	width: 120px;
+	text-align: center;
+	float: left;
+	font-weight: bold;
+	font-size: 10px;
+	line-height: 2ex;
+	overflow: hidden;
+}
+
+.anuncioDestacadoPortada a {
+	text-decoration: none;
+}
+
+.anuncioDestacadoPortada .tituloAnuncio {
+	margin: 3px;
+	font-size: 10px;
+}
+
+.anuncioDestacadoPortada img {
+	display: block;
+	margin: auto;
+	margin-bottom: 0px;
+	height: 68px;
+}
+
+/************** FORMULARIOS EN GENERAL *****************/
+
+form div {
+	margin-top: 3px;
+}
+
+input, select, textarea {
+	border: solid 1px #9a9a9a;
+}
+
+button {
+	border: solid 1px #9a9a9a;
+}
+
+label {
+	display: block;
+}
+
+/**************+ CUADRO DE LOGIN ****************/
+#cuadroLogin {
+	width: 100%;
+	height: 78px;
+	max-height: 78px;
+	text-align: center;
+	vertical-align: middle;
+	position: relative;
+	border: solid 1px #9B9B9B;
+	overflow: hidden;
+}
+
+#cuadroLogin input {
+	height: 22px;
+	width: 137px;
+	padding-left: 22px;
+	padding-top: 3px;
+	margin-top: 3px;
+	border: none 1px;
+}
+
+#cuadroLogin a {
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 9px;
+}
+
+#cuadroLogin .recuadro {
+	border: solid 1px #9a9a9a;
+	margin: 3px 3px 3px 3px;
+	vertical-align: middle;
+	width: 96%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.loginClass {
+	background-image: url(../images/usuario.png);
+	background-repeat: no-repeat;
+	background-position: -1px -1px;
+}
+
+.passwdClass {
+	background-image: url(../images/password.png);
+	background-repeat: no-repeat;
+	background-position: -1px -1px;
+}
+
+#cuadroLogin #boton {
+	height: 18px;
+	width: 17px;
+	float: right;
+	margin-top: 3px;
+	text-align: center;
+	line-height: 7pt;
+	position: absolute;
+	left: 200px;
+	top: 32px;
+	padding: 0px;
+	border: 0px none;
+}
+
+/***************** FORMULARIO DE REGISTRO *******************/
+.registro {
+	padding: 3px;
+}
+
+.registro input {
+	margin-left: 40px;
+	width: 200px;
+}
+
+.registro input:hover {
+	background-color: #f0f0f0;
+}
+
+/******************* FORMULARIO DE ANUNCIOS ******************/
+.formulario {
+	padding: 3px;
+}
+
+.formulario label {
+	padding-top: 5px;
+}
+
+.formulario input, .formulario textarea, .formulario select {
+	margin-left: 40px;
+}
+
+.formulario .campoObligatorio {
+	margin-left: 29px;
+	margin-right: -36px;
+}
+
+.formulario input {
+	width: 200px;
+}
+
+.formulario .ficheros {
+	width: 380px;
+}
+
+.formulario textarea {
+	width: 400px;
+	height: 150px;
+	vertical-align: top;
+}
+
+.formulario #url {
+	width: 400px;
+}
+
+.formulario #imagen1 {
+	width: 400px;
+}
+
+.formulario button {
+	width: 150px;
+	margin: 2px;
+}
+
+.formulario .botonLargo {
+	width: 200px;
+}
+
+.formulario .advertencia {
+	border: solid 2px #0066CC;
+	margin: auto;
+	position: relative;
+	width: 95%;
+	margin-top: 5px;
+	padding: 3px;
+	text-align: justify;
+}
+
+.formulario .advertencia  ul {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/******************* MENSAJE DE ERROR **********************/
+div.error {
+	width: 80%;
+	margin: auto;
+	text-align: center;
+}
+
+.error {
+	font-weight: bold;
+	color: red;
+	border: solid 1px red;
+}
+
+/******************** LISTADOS ******************/
+.listado {
+	width: 95%;
+	border: solid 1px #FF9C9C;
+	margin: auto;
+}
+
+.listado .cabecera {
+	border: solid 1px #FFCFCF;
+	background-color: #E5EFFF;
+}
+
+.listado .linea1 {
+	background-color: #FFF9BB;
+}
+
+.listado  .linea1_nuevo {
+	background-color: #FFF9BB;
+	font-weight: bold;
+}
+
+.listado .linea2 {
+	background-color: #E5EFFF;
+}
+
+.listado .linea2_nuevo {
+	background-color: #E5EFFF;
+	font-weight: bold;
+}
+
+.listado img {
+	display: inline;
+}
+
+.centrado {
+	text-align: center;
+}
+
+/************* ESTILOS MENSAJES *************/
+
+* .mensaje {
+	visibility: hidden;
+	position: fixed;
+	border: double 1px black;
+	width: 280px;
+	height: 300px;
+	left: 50%;
+	top: 50%;
+	margin-top: -150px;
+	margin-left: -140px;
+	background-color: #F8F8F8;
+}
+
+* .denuncia {
+	visibility: hidden;
+	position: fixed;
+	border: double 1px black;
+	width: 280px;
+	height: 410px;
+	left: 50%;
+	top: 50%;
+	margin-top: -150px;
+	margin-left: -140px;
+	background-color: #F8F8F8;
+	padding: 5px;
+}
+
+.mensaje, .denuncia {
+	position: absolute;
+	top: expression( 300 + (ignorar = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + 'px' );
+}
+
+.mensaje .botonCierre, .denuncia .botonCierre{
+	float: right;
+}
+
+.mensaje #campoAsunto, .denuncia #campoAsunto {
+	margin-bottom: 10px;
+	width: 212px;
+}
+
+.mensaje .contenido, .denuncia .contenido {
+	padding: 4px;
+	text-align: left;
+}
+
+.mensaje textarea, .denuncia textarea {
+	margin: auto;
+	width: 250px;
+	height: 140px;
+	position: relative;
+	left: 11px;
+}
+
+/***** ESTILOS ANUNCIOS *****/
+.anuncio {
+	border: solid 1px black;
+	width: 98%;
+	margin: auto;
+	padding: 3px;
+	font-size: 10pt;
+}
+
+.anuncio h2 {
+	margin-top: 0px;
+	margin-bottom: 5px;
+}
+
+.anuncio img {
+	float: left;
+	123margin-right: 5px;
+	123margin-top: 5px;
+}
+
+.anuncio  .publicacion {
+	font-size: 8pt;
+}
+
+.anuncio .texto {
+	padding: 3px;
+}
+
+* .listaMiniImagenes img {
+	margin: 0px;
+	padding: 0px;
+}
+
+.listaMiniImagenes img {
+	margin: 0px;
+	padding: 3px;
+}
+
+* .listaMiniImagenes {
+	border: solid 2px #99CC66;
+	padding: 3px;
+	margin: 3px;
+	display: inline-table;
+	vertical-align: center;
+	text-align: center;
+}
+
+.listaMiniImagenes {
+	border: solid 2px #99CC66;
+	padding: 0px;
+	margin: 2px;
+	display: inline-table;
+	vertical-align: center;
+	text-align: center;
+}
+
+.listaMiniImagenes:hover {
+	border-color: #339933;
+}
+
+/****************** TABLAS DE PRECIOS ****************/
+.tablaPrecios {
+	border-style: double;
+	border-width: 3px;
+	border-color: black;
+	width: 200px;
+	/*position: relative;
+	left: 50%;
+	margin-left: -100px;*/
+	text-align: center;
+	border-collapse: collapse;
+	margin-top: 5px;
+}
+
+.tablaPrecios tr {
+	border-bottom: solid 1px gray;
+}
+
+.celda1 {
+	border-right: solid 1px gray;
+}
+
+.tablaPrecios td {
+	border: solid 1px gray;
+	padding: 2px;
+}
+
+/**************************** MENU SUPERIOR ********************************/
+.menuSuperior {
+	border: solid 1px gray;
+}
+
+.subtituloPagina {
+	font-size:12px;
+	font-weight:bold;
+}
+
+/**************************** LISTA CATEGORIAS *****************************/
+.optionCategoria {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.optionSubcategoria {
+	text-indent: 1em;
+}
+
+#descripcionCategorias {
+	width: 200px;
+}
+
+.cuadroMensaje {
+	border: solid 1px gray;
+	width: 90%;
+	margin: auto;
+	margin-top: 5px;
+	padding: 3px;
+}

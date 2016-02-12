@@ -1,0 +1,13 @@
+Hola ~!usuario~,</h2>
+
+Su denuncia al anuncio "~!anuncio~" ha sido enviada y se le ha asignado el id ~!id~
+Esta será revisada por un administrador y se le enviará un email en cuanto se tome una decisión sobre la denuncia.
+
+Contenido de la denuncia:
+
+~!asunto~
+~!contenido~
+
+
+Muchas gracias.
+El equipo de NombreEmpresa.com

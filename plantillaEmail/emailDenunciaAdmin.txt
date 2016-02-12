@@ -1,0 +1,14 @@
+Hola administrador,
+
+Se ha recibido una nueva denuncia en NombreEmpresa.com con los siguientes datos:
+Denunciante: ~!apellidos~, ~!nombre~.
+E-mail: ~!email~.
+Id de la denuncia: ~!id~
+Anuncio denunciado: ~!enlace_anuncio~
+Asunto: ~!Asunto~
+Denuncia: ~!contenido~
+
+Se solicita a los administradores que revisen el anuncio denunciado lo más rápidamente
+posible, y decidan si aceptar o rechazar la denuncia.
+
+NombreEmpresa.com

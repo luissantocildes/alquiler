@@ -1,0 +1,7 @@
+Hola ~!usuario~,
+
+Se ha procedido a cambiar la contraseña de su cuenta. La nueva contraseña es:
+
+	~!password~
+
+Con esta contraseña podrá acceder a su cuenta de NombreEmpresa.com desde el cuadro de login.
